@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `questionnaire` (
   `header` varchar(500) NOT NULL,
   `comment` varchar(500) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1251 COLLATE=cp1251_general_ci AUTO_INCREMENT=2;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=2;
 
 -- Вставка данных "ПИР ЛЮБВИ"
 INSERT INTO `questionnaire` (`id`, `name`, `header`, `comment`) VALUES
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `questionnaire_list` (
   `required` tinyint(1) DEFAULT NULL,
   `quizzer` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1251 COLLATE=cp1251_general_ci AUTO_INCREMENT=29;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=29;
 
 -- Вставка элементов анкеты для "ПИР ЛЮБВИ"
 INSERT INTO `questionnaire_list` (`id`, `id_list`, `name`, `type`, `sort`, `limits`, `required`, `quizzer`) VALUES
@@ -69,4 +69,4 @@ CREATE TABLE IF NOT EXISTS `questionnaire_data` (
   `date` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `id_list` (`id_list`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1251 COLLATE=cp1251_general_ci AUTO_INCREMENT=1456;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1456;
