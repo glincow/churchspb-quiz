@@ -11,7 +11,7 @@
     $db = new mysqli($host, $user, $password, $database);
 
     // db query settings
-    $db->set_charset('cp1251');
+    $db->set_charset('utf8mb4');
     if ($db->connect_errno) die('Could not connect: '.$mysqli->connect_error);
 
     // make a query to the database
