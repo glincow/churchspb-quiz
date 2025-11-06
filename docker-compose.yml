@@ -16,6 +16,7 @@ services:
 
   db:
     image: mysql:8.0
+        command: --character-set-server=cp1251 --collation-server=cp1251_general_ci
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
       - MYSQL_DATABASE=quiz_db
