@@ -41,24 +41,22 @@ function getCategoryData($category_id) {
                               FROM questionnaire_data qd2
                               INNER JOIN questionnaire_list ql2 ON qd2.id_list = ql2.id
                               WHERE qd2.date = '$date' AND ql2.type = 'in' 
-                              AND ql2.name LIKE '%фамили%'
-                              LIMIT 1";
+                               AND ql2.name = 'Комментарий'                              LIMIT 1";
                 $name_result = db_query($name_query);
                 if ($name_row = $name_result->fetch_assoc()) {
-                    $people[] = $name_row['name'] . ' (' . $value . ')';
-                }
+                   $name = !empty($name_row['name']) ? $name_row['name'] : 'Аноним';
+                    $people[] = $name . ' (' . $value . ')';                }
             } else {
                 // Найдем имя человека по дате
                 $name_query = "SELECT qd2.value as name
                               FROM questionnaire_data qd2
                               INNER JOIN questionnaire_list ql2 ON qd2.id_list = ql2.id
                               WHERE qd2.date = '$date' AND ql2.type = 'in' 
-                              AND ql2.name LIKE '%фамили%'
-                              LIMIT 1";
+                               AND ql2.name = 'Комментарий'                              LIMIT 1";
                 $name_result = db_query($name_query);
                 if ($name_row = $name_result->fetch_assoc()) {
-                    $people[] = $name_row['name'];
-                }
+                   $name = !empty($name_row['name']) ? $name_row['name'] : 'Аноним';
+                    $people[] = $name;                }
             }
         }
         
