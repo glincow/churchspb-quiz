@@ -82,26 +82,26 @@ jobs:
         date_default_timezone_set("Europe/Moscow");
         
         // establish mysql connection & database selection
-        \$host = '127.0.0.1';
-        \$db = new mysqli('127.0.0.1', 'root', 'root_password', 'quiz_db');
+        $host = '127.0.0.1';
+        $db = new mysqli('127.0.0.1', 'root', 'root_password', 'quiz_db');
         
         // db query settings
-        \$db->set_charset('utf8');
-        if (\$db->connect_errno) die('Could not connect: '.\$db->connect_error);
+        $db->set_charset('utf8');
+        if ($db->connect_errno) die('Could not connect: '.$db->connect_error);
         
         // make a query to the database
-        function db_query (\$query) {
-          global \$db;
-          \$res=\$db->query (\$query);
-          if (!\$res) throw new Exception (\$db->error);
-          return \$res;
+        function db_query ($query) {
+          global $db;
+          $res=$db->query ($query);
+          if (!$res) throw new Exception ($db->error);
+          return $res;
         }
         
-        function db_multiQuery (\$query) {
-          global \$db;
-          \$res=\$db->multi_query (\$query);
-          if (!\$res) throw new Exception (\$db->error);
-          return \$res;
+        function db_multiQuery ($query) {
+          global $db;
+          $res=$db->multi_query ($query);
+          if (!$res) throw new Exception ($db->error);
+          return $res;
         }
         EOF
     
@@ -206,7 +206,7 @@ jobs:
         
         3. Update `config.php` with your database connection settings:
         ```php
-        \$db = new mysqli('mysql', 'quiz_user', 'your_password', 'quiz_db');
+        $db = new mysqli('mysql', 'quiz_user', 'your_password', 'quiz_db');
         ```
         
         4. Build and start the containers:
