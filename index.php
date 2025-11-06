@@ -247,7 +247,7 @@ $comment = $questionnaire[0]['comment'];
         if ($(this).val() && $(this).attr("placeholder") === "Другое") {
           check++;
         }
-        if ($(this).val() && $(this).attr("placeholder") === "Ваши фамилия и имя") {
+        if ($(this).val() && $(this).attr("placeholder") === "Комментарий") {
           check_name++;
         }
       }      
