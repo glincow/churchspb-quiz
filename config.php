@@ -9,6 +9,7 @@
     $database = getenv('DB_NAME') ?: 'quiz_db';
     
     $db = new mysqli($host, $user, $password, $database);
+$db->query("SET NAMES utf8mb4");
 
     // db query settings
     $db->set_charset('utf8mb4');
