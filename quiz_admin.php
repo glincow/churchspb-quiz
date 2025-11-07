@@ -106,73 +106,63 @@ $query_service = "SELECT ql.id, ql.name, ql.type
 $items_result = db_query($query_service);
 
 // Получаем данные для категории "САЛАТЫ" (только чекбокс "Салаты")
-// Находим ID элемента "Салаты" в questionnaire_list
+// --- Получаем данные для Салатов ---
 $salads_query = "SELECT ql.id
-                FROM questionnaire_list ql
-                WHERE ql.id_list = 1 AND ql.name LIKE '%Салат%'
-                LIMIT 1";
+    FROM questionnaire_list ql
+    WHERE ql.id_list = 1
+      AND TRIM(ql.name) LIKE '%Салат%'
+      AND ql.type = 'ch'
+    LIMIT 1";
 $salads_id_result = db_query($salads_query);
 $salads_id = null;
 if ($salads_row = $salads_id_result->fetch_assoc()) {
     $salads_id = $salads_row['id'];
 }
 
-// Получаем людей, которые отметили "Салаты"
 $salads_people = [];
 $salads_count = 0;
+
 if ($salads_id) {
-    $people_query = "SELECT qd.value, qd.date, qd.id as response_id
-                    FROM questionnaire_data qd
-                    WHERE qd.id_list = $salads_id
-                    ORDER BY qd.date";
-    
+    $people_query = "SELECT qd.value, qd.date
+        FROM questionnaire_data qd
+        WHERE qd.id_list = $salads_id
+        ORDER BY qd.date";
     $people_result = db_query($people_query);
-    
     while ($person = $people_result->fetch_assoc()) {
-        $value = $person['value'];
-        $response_id = $person['response_id'];
-        
-        // Для чекбокса: value = '1' означает, что элемент выбран
-        if ($value === '1') {
-            // Найдем имя человека по дате
+        if ($person['value'] === '1') {
             $name_query = "SELECT qd2.value as name
-                            FROM questionnaire_data qd2
-                            WHERE qd2.date = '".$person['date']."' AND qd2.id_list = 9
-                            LIMIT 1";
+                           FROM questionnaire_data qd2
+                           WHERE qd2.date = '".$person['date']."' AND qd2.id_list = 9
+                           LIMIT 1";
             $name_result = db_query($name_query);
             if ($name_row = $name_result->fetch_assoc()) {
                 $name = !empty($name_row['name']) ? $name_row['name'] : 'Аноним';
                 $salads_people[] = $name;
-                $salads_count++;
             } else {
                 $salads_people[] = 'Аноним';
-                $salads_count++;
             }
+            $salads_count++;
         }
     }
 }
 
-// Добавляем Салаты в массив $food_data
+// --- Вставляем Салаты после Мясного ---
 if ($salads_count > 0) {
-    // Находим позицию после "Мясное" для вставки салатов
     $insert_position = 0;
     foreach ($food_data as $index => $item) {
-        if (strpos($item['name'], 'Мясное') !== false) {
+        if (mb_stripos($item['name'], 'Мясное') !== false) {
             $insert_position = $index + 1;
             break;
         }
     }
-    
-    // Создаем элемент Салаты
     $salads_item = [
         'name' => 'Салаты',
         'count' => $salads_count,
         'people' => $salads_people
     ];
-    
-    // Вставляем в массив
     array_splice($food_data, $insert_position, 0, [$salads_item]);
 }
+
 
 while ($item = $items_result->fetch_assoc()) {
     $item_id = $item['id'];
