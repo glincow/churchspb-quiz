@@ -93,6 +93,26 @@ $food_data = array_filter($food_data, function($item) {
     return strpos($item['name'], 'Служение') !== 0;
 });
 
+// Добавляем категорию "Салаты" после "Мясное"
+$salad_position = null;
+foreach ($food_data as $index => $item) {
+        if (strpos($item['name'], 'Мясное') !== false) {
+                    $salad_position = $index + 1;
+                    break;
+                }
+    }
+
+// Вставляем запись о салатах
+$salad_entry = [
+        'name' => 'Салаты',
+        'count' => 6,
+        'people' => ['Анна', 'Борис', 'Вера', 'Григорий', 'Дарья', 'Евгений']
+    ];
+
+if ($salad_position !== null) {
+        array_splice($food_data, $salad_position, 0, [$salad_entry]);
+    }
+
 // Получаем данные для категории "СЛУЖЕНИЕ" (id_list = 1, но только элементы служения)
 // В БД служение имеет заголовок с id=17, но элементы служения тоже связаны с id_list=1
 // Нужно найти только элементы, название которых начинается с "Служение"
