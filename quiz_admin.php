@@ -105,65 +105,6 @@ $query_service = "SELECT ql.id, ql.name, ql.type
 
 $items_result = db_query($query_service);
 
-// Получаем данные для категории "САЛАТЫ" (только чекбокс "Салаты")
-// --- Получаем данные для Салатов ---
-$salads_query = "SELECT ql.id
-    FROM questionnaire_list ql
-    WHERE ql.id_list = 1
-      AND TRIM(ql.name) LIKE '%Салат%'
-      AND ql.type = 'ch'
-    LIMIT 1";
-$salads_id_result = db_query($salads_query);
-$salads_id = null;
-if ($salads_row = $salads_id_result->fetch_assoc()) {
-    $salads_id = $salads_row['id'];
-}
-
-$salads_people = [];
-$salads_count = 0;
-
-if ($salads_id) {
-    $people_query = "SELECT qd.value, qd.date
-        FROM questionnaire_data qd
-        WHERE qd.id_list = $salads_id
-        ORDER BY qd.date";
-    $people_result = db_query($people_query);
-    while ($person = $people_result->fetch_assoc()) {
-        if ($person['value'] === '1') {
-            $name_query = "SELECT qd2.value as name
-                           FROM questionnaire_data qd2
-                           WHERE qd2.date = '".$person['date']."' AND qd2.id_list = 9
-                           LIMIT 1";
-            $name_result = db_query($name_query);
-            if ($name_row = $name_result->fetch_assoc()) {
-                $name = !empty($name_row['name']) ? $name_row['name'] : 'Аноним';
-                $salads_people[] = $name;
-            } else {
-                $salads_people[] = 'Аноним';
-            }
-            $salads_count++;
-        }
-    }
-}
-
-// --- Вставляем Салаты после Мясного ---
-if ($salads_count > 0) {
-    $insert_position = 0;
-    foreach ($food_data as $index => $item) {
-        if (mb_stripos($item['name'], 'Мясное') !== false) {
-            $insert_position = $index + 1;
-            break;
-        }
-    }
-    $salads_item = [
-        'name' => 'Салаты',
-        'count' => $salads_count,
-        'people' => $salads_people
-    ];
-    array_splice($food_data, $insert_position, 0, [$salads_item]);
-}
-
-
 while ($item = $items_result->fetch_assoc()) {
     $item_id = $item['id'];
     $item_name = $item['name'];
@@ -300,7 +241,7 @@ foreach ($service_data as $item) {
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info">
-                            <strong>Всего блюд: <?php echo $total_food; ?> </strong>
+                            <strong>Всего блюд: <?php echo $total_food; ?> /strong>
                         </div>
                         <table class="table table-hover">
                             <thead>
@@ -329,4 +270,43 @@ foreach ($service_data as $item) {
             </div>
 
             <!-- Категория СЛУЖЕНИЕ -->
-         
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header service-header">
+                        ⛪ СЛУЖЕНИЕ
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-success">
+                            <strong>Всего участников: <?php echo $total_service; ?> чел.</strong>
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Служение</th>
+                                    <th class="text-center">Кол-во</th>
+                                    <th>Участники</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($service_data as $item): ?>
+                                <tr>
+                                    <td><strong><?php echo htmlspecialchars($item['name']); ?></strong></td>
+                                    <td class="text-center">
+                                        <span class="badge bg-success"><?php echo $item['count']; ?></span>
+                                    </td>
+                                    <td>
+                                        <?php echo htmlspecialchars(implode(', ', $item['people'])); ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
