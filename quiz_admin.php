@@ -109,7 +109,7 @@ $items_result = db_query($query_service);
 // Находим ID элемента "Салаты" в questionnaire_list
 $salads_query = "SELECT ql.id
                 FROM questionnaire_list ql
-                WHERE ql.id_list = 1 AND ql.name =LIKE '%Салат%'
+                WHERE ql.id_list = 1 AND ql.name LIKE '%Салат%'
                 LIMIT 1";
 $salads_id_result = db_query($salads_query);
 $salads_id = null;
