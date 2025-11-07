@@ -109,7 +109,7 @@ $items_result = db_query($query_service);
 // Находим ID элемента "Салаты" в questionnaire_list
 $salads_query = "SELECT ql.id
                 FROM questionnaire_list ql
-                WHERE ql.id_list = 1 AND ql.name = 'Салаты' AND ql.type = 'ch'
+                WHERE ql.id_list = 1 AND ql.name =LIKE '%Салат%'
                 LIMIT 1";
 $salads_id_result = db_query($salads_query);
 $salads_id = null;
@@ -150,6 +150,28 @@ if ($salads_id) {
             }
         }
     }
+}
+
+// Добавляем Салаты в массив $food_data
+if ($salads_count > 0) {
+    // Находим позицию после "Мясное" для вставки салатов
+    $insert_position = 0;
+    foreach ($food_data as $index => $item) {
+        if (strpos($item['name'], 'Мясное') !== false) {
+            $insert_position = $index + 1;
+            break;
+        }
+    }
+    
+    // Создаем элемент Салаты
+    $salads_item = [
+        'name' => 'Салаты',
+        'count' => $salads_count,
+        'people' => $salads_people
+    ];
+    
+    // Вставляем в массив
+    array_splice($food_data, $insert_position, 0, [$salads_item]);
 }
 
 while ($item = $items_result->fetch_assoc()) {
@@ -317,69 +339,4 @@ foreach ($service_data as $item) {
             </div>
 
             <!-- Категория СЛУЖЕНИЕ -->
-            <div class="col-md-6">
-                <div class
-                    
-                            <!-- Категория САЛАТЫ -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header food-header">
-                    🥗 САЛАТЫ
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-info">
-                        <strong>Всего салатов: <?php echo $salads_count; ?></strong> чел.
-                    </div>
-                    <?php if ($salads_count > 0): ?>
-                        <div class="participant-list">
-                            <strong>Участники:</strong>
-                            <ul>
-                                <?php foreach ($salads_people as $person_name): ?>
-                                    <li><?php echo htmlspecialchars($person_name); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php else: ?>
-                        <p>Никто пока не отметил салаты</p>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>="card">
-                    <div class="card-header service-header">
-                        ⛪ СЛУЖЕНИЕ
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-success">
-                            <strong>Всего участников: <?php echo $total_service; ?> чел.</strong>
-                        </div>
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Служение</th>
-                                    <th class="text-center">Кол-во</th>
-                                    <th>Участники</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($service_data as $item): ?>
-                                <tr>
-                                    <td><strong><?php echo htmlspecialchars($item['name']); ?></strong></td>
-                                    <td class="text-center">
-                                        <span class="badge bg-success"><?php echo $item['count']; ?></span>
-                                    </td>
-                                    <td>
-                                        <?php echo htmlspecialchars(implode(', ', $item['people'])); ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+         
