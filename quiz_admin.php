@@ -88,6 +88,10 @@ function getCategoryData($category_id) {
 
 // Получаем данные для категории "ПИЩА" (id_list = 1)
 $food_data = getCategoryData(1);
+// Исключаем элементы служения из таблицы "Пища"
+$food_data = array_filter($food_data, function($item) {
+    return strpos($item['name'], 'Служение') !== 0;
+});
 
 // Получаем данные для категории "СЛУЖЕНИЕ" (id_list = 1, но только элементы служения)
 // В БД служение имеет заголовок с id=17, но элементы служения тоже связаны с id_list=1
@@ -237,7 +241,7 @@ foreach ($service_data as $item) {
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info">
-                            <strong>Всего участников: <?php echo $total_food; ?> чел.</strong>
+                            <strong>Всего блюд: <?php echo $total_food; ?> /strong>
                         </div>
                         <table class="table table-hover">
                             <thead>
