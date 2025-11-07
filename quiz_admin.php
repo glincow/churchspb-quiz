@@ -241,7 +241,7 @@ foreach ($service_data as $item) {
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info">
-                            <strong>Всего блюд: <?php echo $total_food; ?> /strong>
+                            <strong>Всего блюд: <?php echo $total_food; ?> </strong>
                         </div>
                         <table class="table table-hover">
                             <thead>
